@@ -8,6 +8,7 @@ VPN_HOST="cvpn-endpoint-06ac4470d22098c4d.prod.clientvpn.us-east-1.amazonaws.com
 OVPN_BIN="./openvpn"
 # path to the configuration file
 OVPN_CONF="vpn.conf"
+#PORT=1194
 PORT=443
 PROTO=udp
 
@@ -20,9 +21,12 @@ wait_file() {
 
 # create random hostname prefix for the vpn gw
 RAND=$(openssl rand -hex 12)
+echo "RAND: $RAND"
 
 # resolv manually hostname to IP, as we have to keep persistent ip address
 SRV=$(dig a +short "${RAND}.${VPN_HOST}"|head -n1)
+
+echo "SRV: $SRV"
 
 # cleanup
 rm -f saml-response.txt
@@ -33,8 +37,13 @@ OVPN_OUT=$($OVPN_BIN --config "${OVPN_CONF}" --verb 3 \
      --auth-user-pass <( printf "%s\n%s\n" "N/A" "ACS::35001" ) \
     2>&1 | grep AUTH_FAILED,CRV1)
 
+echo "now openvpn output:"
+echo $OVPN_OUT
+
 echo "Opening browser and wait for the response file..."
 URL=$(echo "$OVPN_OUT" | grep -Eo 'https://.+')
+
+echo "url: $URL"
 
 unameOut="$(uname -s)"
 case "${unameOut}" in
@@ -50,6 +59,8 @@ wait_file "saml-response.txt" 30 || {
 
 # get SID from the reply
 VPN_SID=$(echo "$OVPN_OUT" | awk -F : '{print $7}')
+
+echo "sid: $VPN_SID"
 
 echo "Running OpenVPN with sudo. Enter password if requested"
 
