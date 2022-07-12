@@ -51,7 +51,7 @@ fi
 
 # install deps for openvpn
 echo -e "${BLUE}[installing deps] ${NC}"
-sudo apt install -y liblz4-dev liblzo2-dev libpam0g-dev libpkcs11-helper1-dev
+sudo apt install -y liblz4-dev liblzo2-dev libpam0g-dev libpkcs11-helper1-dev dnsutils
 if [ $? -ne "0" ]; then
 	echo -e "${RED}[failed to install deps] ${NC}"
 	exit 1

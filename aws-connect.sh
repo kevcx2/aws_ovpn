@@ -3,11 +3,13 @@
 set -e
 
 # replace with your hostname
-VPN_HOST="cvpn-endpoint-06ac4470d22098c4d.prod.clientvpn.us-east-1.amazonaws.com"
+VPN_HOST="cvpn-endpoint-xxx.prod.clientvpn.us-east-1.amazonaws.com"
+# replace vpn.conf contents with the VPN client configuration file downloaded
+# from the AWS VPN portal (https://self-service.clientvpn.amazonaws.com/)
+OVPN_CONF="vpn.conf"
+
 # path to the patched openvpn
 OVPN_BIN="./openvpn"
-# path to the configuration file
-OVPN_CONF="vpn.conf"
 #PORT=1194
 PORT=443
 PROTO=udp
